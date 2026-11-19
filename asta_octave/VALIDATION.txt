@@ -1,0 +1,23 @@
+Validated 19 November 2026
+
+Numerical suite: PASS
+Both lab controllers and independent PD-output state-space realization: PASS
+19 legacy system models, exact byte round-trip: PASS
+Project model/metadata and comparison-session round-trip: PASS
+Double-precision text and CSV round-trip: PASS
+Stability and insufficient-horizon handling: PASS
+All ten plot types and main-window construction with gnuplot: PASS
+Five comparison PNGs and two saved .asta examples: generated
+Interactive Qt clicks/dialogs: NOT TESTED (only gnuplot available)
+Original protected MATLAB behavior / complete feature parity: NOT VERIFIED
+Original source manifest rechecked: PASS
+
+Studio update:
+Persistent Octave worker + browser workspace: PASS
+Desktop and 390px mobile interaction tests: PASS
+All 19 library models, ten views, comparisons and session round trips: PASS
+Real zoom, measurement, CSV/SVG/PNG/JSON downloads and unchanged import export: PASS
+Cache identity and API validation/origin checks: PASS
+4,001-point first request: 671 ms; cached repeats: 65–82 ms (same data)
+View switching: no additional API requests
+Native Qt interaction: still not tested; Studio does not require Qt

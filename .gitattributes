@@ -1,0 +1,3 @@
+*.syst -text -whitespace
+*.asta binary
+*.png binary
