@@ -21,3 +21,11 @@ Cache identity and API validation/origin checks: PASS
 4,001-point first request: 671 ms; cached repeats: 65–82 ms (same data)
 View switching: no additional API requests
 Native Qt interaction: still not tested; Studio does not require Qt
+
+Octave package 1.0.0:
+pkg install/load in an isolated prefix and registry: PASS
+Dependency loading and private full self-test suite: PASS
+Package BIST tests and 19 installed sample models: PASS
+Installed browser backend and lab response: PASS
+Installed Octave launch command with custom port: PASS
+Package unload/reload and uninstall: PASS

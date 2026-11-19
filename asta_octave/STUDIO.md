@@ -4,7 +4,19 @@ The default launcher now opens a local browser workspace. GNU Octave still
 computes the models, responses and statistics; Python serves the interface and
 coordinates one persistent Octave process. Qt graphics are not required.
 
-From the CLACO folder, in Octave:
+As an installed Octave package:
+
+```octave
+pkg load astastudio
+astastudio
+```
+
+Use `astastudio('test')` for self-tests and `astastudio('info')` for installed
+paths. `pkg unload astastudio` removes its functions from the Octave path; an
+already running browser server continues until its process is stopped. See the
+repository README for the installation URL and package requirements.
+
+From a source checkout in Octave (the CLACO folder in the original workspace):
 
 ```octave
 start_asta_octave

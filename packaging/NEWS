@@ -1,0 +1,7 @@
+ASTA Studio 1.0.0 (19 November 2026)
+
+* First installable GNU Octave package.
+* pkg load astastudio exposes the browser workspace and numerical API.
+* astastudio launches the workspace; astastudio('test') runs the full self-test.
+* Includes the existing browser UI, bounded caches, examples, and 19 plant models.
+* Native Qt UI and binary .asta project APIs remain available.

@@ -1,0 +1,15 @@
+Name: astastudio
+Version: 1.0.0
+Date: 2026-11-19
+Author: ASTA Studio contributors
+Maintainer: Surriya B (https://github.com/Surriya1010)
+Title: Interactive SISO Control Design Studio
+Description: Design and compare continuous-time SISO controllers with GNU Octave.
+ Includes a local browser workspace, transfer-function analysis, time and frequency
+ responses, controller presets, measurements, comparison projects and export.
+ Numerical work runs in Octave; the browser workspace does not require Qt.
+Depends: octave (>= 8.4.0), control (>= 4.0.0)
+SystemRequirements: Python (>= 3.8), octave-cli, web browser
+Categories: Control
+Url: https://github.com/Surriya1010/asta-studio
+Tracker: https://github.com/Surriya1010/asta-studio/issues

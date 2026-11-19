@@ -6,6 +6,50 @@ the calculations in a persistent worker; the interface works without Qt graphics
 
 ![ASTA Studio](asta_octave/examples/studio_desktop.png)
 
+## Install as an Octave package
+
+Download the package from [Releases](https://github.com/Surriya1010/asta-studio/releases).
+In Octave:
+
+```octave
+pkg install -forge control  % only if control is not already installed
+pkg install "https://github.com/Surriya1010/asta-studio/releases/download/v1.0.0/astastudio-1.0.0.tar.gz"
+pkg load astastudio
+astastudio
+```
+
+The package declares Octave >= 8.4 and control >= 4.0. It was tested with Octave
+11.1.0 and control 4.2.1. The browser workspace also needs Python >= 3.8 and
+`octave-cli` on PATH. The automatic Octave launcher supports Linux/macOS; on
+Windows launch the installed `studio/server.py` from Python as described below.
+Loading the package alone does not start a browser or server.
+
+```octave
+astastudio('info')     % installed paths and model library
+astastudio('version')  % package version
+astastudio('test')     % complete numerical and data round-trip self-tests
+astastudio('open', 'port', 8770, 'browser', false)
+pkg unload astastudio
+pkg uninstall astastudio
+```
+
+A native package archive follows the [Octave package format](https://docs.octave.org/latest/Creating-Packages.html).
+This release is installed from its URL; it has not been submitted to the central
+Octave Packages index. Package/unload/uninstall tests use an isolated registry and
+leave existing user packages unchanged. `COPYING` records the current unspecified
+license status; packaging does not add a software license.
+
+To rebuild and test the installable archive from this checkout:
+
+```sh
+python3 tools/build_octave_package.py
+python3 tools/test_octave_package.py dist/astastudio-1.0.0.tar.gz
+```
+
+The builder creates a reproducible archive with package metadata, runtime assets,
+private self-tests, and SHA-256 checksums. No original protected MATLAB code or
+course PDFs are included.
+
 ## Run
 
 Requires Python 3, GNU Octave (`octave-cli`) and the Octave `control` package.
