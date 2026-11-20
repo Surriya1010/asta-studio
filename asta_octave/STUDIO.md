@@ -48,6 +48,12 @@ No JavaScript packages, external servers, accounts or CDNs are needed.
   and phase together. Drag a rectangle to zoom; Reset zoom restores the range.
   Hover for sampled coordinates. Click two points on the same design to measure
   differences in time/frequency, ordinate, gain and phase.
+- **Statistics button:** opens a separate MATLAB-labelled time/frequency report,
+  with final value, signed static error, maximum output, overshoot, peak time,
+  both settling times, T peak, resonance frequency, DC magnitude in dB, Mr and
+  bandwidth. Select current or saved designs, control displayed precision, and
+  export full-precision statistics CSV. The report shows its sampling context
+  and marks outdated results, unstable loops and boundary peaks.
 - **Right:** stable/unstable indication, overshoot, observed settling and rise time,
   control peak, gain/phase/delay margins, T resonance and bandwidth. Expand All
   statistics for the full result. Infinity and undefined values remain distinct
@@ -126,3 +132,9 @@ full original feature parity is still not established.
 Desktop and mobile screenshots are in `examples/studio_desktop.png` and
 `examples/studio_mobile.png`. Browser tests use an isolated testing profile and
 write downloads to a new temporary directory.
+
+`tests/statistics_browser.mjs` checks all twelve MATLAB-labelled rows, non-unit
+DC gain/static error, T peak versus Mr, saved designs, unchanged sampling, full
+precision CSV, keyboard dismissal/focus, stale/unstable/infinite values, and
+390 px mobile layout. It uses `ASTA_TEST_URL` and `ASTA_CDP_URL` to select the
+test server and isolated Chrome debugging connection.

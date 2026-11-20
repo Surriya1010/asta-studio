@@ -1,13 +1,13 @@
 import fs from 'node:fs/promises';
 import {fileURLToPath} from 'node:url';
 const artifactDir=fileURLToPath(new URL('../examples/',import.meta.url));
-const targets=await(await fetch('http://127.0.0.1:9222/json')).json();
+const targets=await(await fetch((process.env.ASTA_CDP_URL||'http://127.0.0.1:9222')+'/json')).json();
 const ws=new WebSocket(targets.find(t=>t.type==='page').webSocketDebuggerUrl);await new Promise(r=>ws.addEventListener('open',r,{once:true}));
 let seq=0;const pending=new Map();ws.addEventListener('message',e=>{const m=JSON.parse(e.data);if(m.id){const {resolve,reject}=pending.get(m.id)||{};pending.delete(m.id);m.error?reject(m.error):resolve(m.result);}});
 function call(method,params={}){return new Promise((resolve,reject)=>{const id=++seq;pending.set(id,{resolve,reject});ws.send(JSON.stringify({id,method,params}));});}
 async function evaluate(expression){const r=await call('Runtime.evaluate',{expression,returnByValue:true,awaitPromise:true});if(r.exceptionDetails)throw Error(JSON.stringify(r.exceptionDetails));return r.result.value;}
 async function wait(expression,timeout=30000){const end=Date.now()+timeout;while(Date.now()<end){if(await evaluate(expression))return;await new Promise(r=>setTimeout(r,100));}throw Error('Timed out: '+expression);}
-await call('Page.enable');await call('Runtime.enable');await call('Emulation.setDeviceMetricsOverride',{width:1440,height:1100,deviceScaleFactor:1,mobile:false});await call('Page.navigate',{url:'http://127.0.0.1:8765'});
+await call('Page.enable');await call('Runtime.enable');await call('Emulation.setDeviceMetricsOverride',{width:1440,height:1100,deviceScaleFactor:1,mobile:false});await call('Page.navigate',{url:process.env.ASTA_TEST_URL||'http://127.0.0.1:8765'});
 await wait('typeof state!=="undefined"');
 await evaluate('localStorage.removeItem("asta-studio-v1")');await call('Page.reload');
 await wait('typeof state!=="undefined" && state.results.length===1 && !state.busy');

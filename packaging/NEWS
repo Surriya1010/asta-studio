@@ -1,3 +1,11 @@
+ASTA Studio 1.1.0 (20 November 2026)
+
+* New Statistics button with MATLAB-labelled time/frequency tables.
+* Adds signed static error, maximum/minimum sampled output and DC magnitude in dB.
+* Inspect current and saved designs, choose precision, and export full-precision CSV.
+* Shows sampling context, outdated results, unstable loops and frequency-boundary peaks.
+* Keyboard-accessible, responsive dialog distinguishes T peak, Mr, Tp and rise time.
+
 ASTA Studio 1.0.0 (19 November 2026)
 
 * First installable GNU Octave package.

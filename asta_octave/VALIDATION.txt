@@ -29,3 +29,12 @@ Package BIST tests and 19 installed sample models: PASS
 Installed browser backend and lab response: PASS
 Installed Octave launch command with custom port: PASS
 Package unload/reload and uninstall: PASS
+
+Statistics update 1.1.0 (20 November 2026):
+12 MATLAB-labelled statistics rows and explicit model/sampling context: PASS
+Static error, sampled maximum, DC dB, Mr identity and reference-prefilter tests: PASS
+Zero/negative outputs and infinite/undefined statistics: PASS
+Saved design selection, precision and full-precision CSV: PASS
+Stale-result messaging, keyboard controls and mobile report layout: PASS
+Existing plots/comparisons/export browser regression: PASS
+Octave package install/load/launch/self-tests/unload/uninstall: PASS

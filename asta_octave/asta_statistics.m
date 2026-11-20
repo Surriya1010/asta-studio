@@ -22,6 +22,7 @@ function a = asta_statistics(p, t, w)
     a.([key{1} '_peak_at_grid_boundary']) = j == 1 || j == numel(w);
   end
   a.T_dc = dcgain(m.T);
+  a.T_dc_db = 20*log10(abs(a.T_dc));
   a.resonance_ratio = a.T_peak / abs(a.T_dc);
   a.resonance_ratio_db = 20*log10(a.resonance_ratio);
   f = tfrequency;
@@ -39,12 +40,15 @@ function a = asta_statistics(p, t, w)
 end
 
 function a = time_metrics(r,h,stable)
-  a = struct('final_value', NaN, 'peak', NaN, 'peak_time', NaN, ...
+  a = struct('final_value', NaN, 'static_error_percent', NaN, ...
+     'maximum_output', max(r.y), 'minimum_output', min(r.y), ...
+     'peak', NaN, 'peak_time', NaN, ...
      'overshoot_percent', NaN, 'rise_time_10_90', NaN, ...
      'settling_time_5_percent', NaN, 'settling_time_2_percent', NaN, ...
      'settling_is_observed_estimate', true);
   if ~stable || ~isstable(h), return; end
   final = dcgain(h); a.final_value = final;
+  if isfinite(final), a.static_error_percent = 100*(1-final); end
   if ~isfinite(final) || final == 0, return; end
   z = r.y / final;
   [peak,j] = max(z); a.peak = r.y(j); a.peak_time = r.t(j);

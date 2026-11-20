@@ -2,6 +2,7 @@
 """Install/test/uninstall in an isolated registry; exercise the installed server."""
 import argparse
 import json
+import re
 from pathlib import Path
 import signal
 import subprocess
@@ -22,13 +23,14 @@ def main():
     parser.add_argument('archive',type=Path)
     args=parser.parse_args()
     archive=args.archive.resolve()
+    version=re.search(r'^Version: (.+)$',(ROOT/'packaging/DESCRIPTION').read_text(),re.M).group(1)
     with tempfile.TemporaryDirectory(prefix='astastudio-install-') as temporary:
         directory=Path(temporary)
         registry=directory/'packages'; prefix=directory/'installed'; info=directory/'info.json'
         setup=f"pkg('local_list',{literal(registry)}); pkg('prefix',{literal(prefix)}); "
         octave(f"old=pkg('local_list'); if exist(old,'file'), copyfile(old,{literal(registry)}); end; "+setup+
                f"pkg('install','-local',{literal(archive)}); pkg('load','astastudio'); "+
-               "assert(strcmp(astastudio('version'),'1.0.0')); "+
+               f"assert(strcmp(astastudio('version'),{literal(version)})); "+
                f"assert(strncmp(which('astastudio'),{literal(prefix)},length({literal(prefix)}))); "+
                "assert(astastudio('test')); assert(test('astastudio','quiet')); "+
                "pkg('unload','astastudio'); assert(isempty(which('astastudio'))); pkg('load','astastudio'); "+
@@ -45,12 +47,18 @@ def main():
                 with opener.open(req,timeout=30) as response: result=json.load(response)
                 assert result['ok'],result
                 return result['data']
+            with opener.open(url+'/statistics.js',timeout=10) as response:
+                assert b'statisticsRows' in response.read()
+            with opener.open(url+'/',timeout=10) as response:
+                assert b'id="statistics-dialog"' in response.read()
             assert len(request({'action':'systems'}))==19
             p={'name':'Installed package P','G':{'num':[.1],'den':[1,2,1,0]},'K':{'num':[4.8],'den':[1]},'R':{'num':[1],'den':[1]}}
             grid={'time_end':40,'time_samples':4001,'w_min':.001,'w_max':1000,'w_samples':4001}
             data=request({'action':'analyze','project':p,'grid':grid})
             assert abs(data['statistics']['time']['overshoot_percent']-23.584)<.1
             assert data['statistics']['closed_loop_stable']
+            assert abs(data['statistics']['time']['static_error_percent'])<1e-10
+            assert abs(data['statistics']['T_dc_db'])<1e-10
             port=int(url.rsplit(':',1)[1])
             octave(setup+f"pkg('load','astastudio'); astastudio('open','port',{port},'browser',false);")
             print('PASS: installed browser server, 19 models, lab response and Octave launcher.')

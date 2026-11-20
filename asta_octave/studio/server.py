@@ -105,7 +105,7 @@ class Handler(BaseHTTPRequestHandler):
     def do_GET(self):
         if not self.allowed():
             self.respond(403, {'error': 'Use the local Studio address.'}); return
-        assets={'/':'index.html','/app.js':'app.js','/style.css':'style.css'}
+        assets={'/':'index.html','/app.js':'app.js','/statistics.js':'statistics.js','/style.css':'style.css'}
         if self.path=='/api/health':
             self.respond(200, {'ok':True,'engine':'GNU Octave','persistent':True}); return
         if self.path not in assets:

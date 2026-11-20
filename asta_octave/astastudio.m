@@ -14,10 +14,10 @@ function result = astastudio(action, varargin)
     case {'open','start'}
       asta_studio(varargin{:}); result = [];
     case 'version'
-      result = '1.0.0';
+      result = '1.1.0';
     case 'info'
       models = dir(fullfile(root,'systeme','*.syst'));
-      result = struct('name','astastudio','version','1.0.0','root',root, ...
+      result = struct('name','astastudio','version','1.1.0','root',root, ...
         'model_directory',fullfile(root,'systeme'),'model_count',numel(models), ...
         'server',fullfile(root,'studio','server.py'), ...
         'repository','https://github.com/Surriya1010/asta-studio');
@@ -36,11 +36,12 @@ function result = astastudio(action, varargin)
 end
 
 %!test
-%! assert(strcmp(astastudio('version'), '1.0.0'));
+%! assert(strcmp(astastudio('version'), '1.1.0'));
 %! info = astastudio('info');
 %! assert(info.model_count, 19);
 %! assert(exist(info.server, 'file'), 2);
 %! assert(exist(fullfile(info.root, 'studio', 'app.js'), 'file'), 2);
+%! assert(exist(fullfile(info.root, 'studio', 'statistics.js'), 'file'), 2);
 
 %!test
 %! pkg load control;

@@ -81,6 +81,28 @@ function run_tests()
   for spec={{'gain',2},{'integrator',2},{'first',2,3},{'second',2,3,.4},{'leadlag',2,3,4}}
     args=spec{1}; asta_template(args{:});
   end
+  % MATLAB-labelled report fields: non-unit final value, prefilter and zeros.
+  example=asta_project(tf(1,[1 2 1]),tf(6),tf(1),'Non-unit DC');
+  report=asta_statistics(example,linspace(0,25,5001),w);
+  assert(abs(report.time.final_value-6/7)<1e-12);
+  assert(abs(report.time.static_error_percent-100/7)<1e-10);
+  assert(abs(report.T_dc_db-20*log10(6/7))<1e-12);
+  assert(abs(report.resonance_ratio_db-(report.T_peak_db-report.T_dc_db))<1e-12);
+  sampled=asta_response(example,'Y',linspace(0,25,5001));
+  assert(report.time.maximum_output==max(sampled.y));
+  example.R=tf(.5); filtered=asta_statistics(example,t,w);
+  assert(abs(filtered.time.final_value-3/7)<1e-12);
+  assert(abs(filtered.time.static_error_percent-400/7)<1e-10);
+  assert(abs(filtered.T_dc_db-report.T_dc_db)<1e-12);
+  example.R=tf(0); zero=asta_statistics(example,t,w);
+  assert(zero.time.static_error_percent==100 && zero.time.maximum_output==0);
+  assert(isnan(zero.time.overshoot_percent));
+  example.R=tf(-1); negative=asta_statistics(example,t,w);
+  assert(negative.time.maximum_output==0 && negative.time.minimum_output<0);
+  highpass=asta_project(tf([1 0],[1 1]),tf(1),tf(1));
+  zero_dc=asta_statistics(highpass,t,w);
+  assert(isinf(zero_dc.T_dc_db) && zero_dc.T_dc_db<0);
+  assert(isnan(zero_dc.bandwidth_3db));
   asta_model_cache('clear');
   first=asta_models(p); second=asta_models(p); info=asta_model_cache('info');
   assert(info.hits==1 && info.misses==1);

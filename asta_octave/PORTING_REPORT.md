@@ -85,3 +85,18 @@ widths, including actual zoom/measurement gestures and downloaded files. See
 STUDIO.md for exact test coverage, measured timings and format compatibility.
 This resolves the Qt requirement for the new Studio UI; it does not establish
 parity with the protected original MATLAB implementation.
+
+## MATLAB-labelled statistics (version 1.1.0)
+
+A new Statistics dialog displays all twelve time/frequency labels from the
+provided MATLAB ASTA screenshot, in separate tables. It adds signed unit-reference
+static error, explicitly sampled maximum/minimum output and DC magnitude in dB.
+Tests verify final value 6/7 and static error 100/7 for a non-unit-gain example;
+reference-prefilter effects; the T-peak-minus-DC definition of Mr; zero/negative
+outputs; and infinite/undefined cases. The example screenshot is illustrative,
+not a numerical reproduction of a MATLAB run with unknown model coefficients.
+
+Browser checks cover all twelve label mappings, current/saved design selection,
+6/10/full display precision, full-precision CSV, stale-result messages, keyboard
+focus/dismissal and mobile layout. The existing plotting workflow and isolated
+Octave install/load/launch/unload/uninstall checks pass.

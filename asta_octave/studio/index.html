@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>ASTA Studio · Control design</title><link rel="stylesheet" href="/style.css"><script src="/app.js" defer></script></head>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>ASTA Studio · Control design</title><link rel="stylesheet" href="/style.css"><script src="/statistics.js" defer></script><script src="/app.js" defer></script></head>
 <body>
 <header class="topbar"><div class="brand"><span class="brand-mark" aria-hidden="true">∿</span><div>ASTA <b>STUDIO</b><small>CONTROL DESIGN WORKSPACE</small></div></div><div class="project-title"><input id="project-name" aria-label="Project name" value="Lab · proportional control"><span id="dirty">All changes saved locally</span></div><div class="header-actions"><span class="engine"><i></i> Octave engine</span><button id="load-session">Open</button><button id="save-session">Save project <kbd>⌘/Ctrl S</kbd></button></div></header>
 <main>
@@ -14,7 +14,7 @@
 <section class="workspace">
 <div class="workspace-heading"><div><span class="eyebrow">RESPONSE EXPLORER</span><h1 id="plot-title">Closed-loop tracking</h1></div><div class="stability" id="stability">Calculating…</div></div>
 <nav class="view-tabs" aria-label="Response domain"><button class="active" data-domain="time">Time domain</button><button data-domain="frequency">Frequency domain</button></nav>
-<div class="plot-toolbar"><label class="sr-only" for="view">Response</label><select id="view"><option value="closed">Closed loop · R(s)T(s)</option><option value="open">Open loop · G(s)</option><option value="control">Control input · U(s)</option><option value="reference">Filtered reference · R(s)</option></select><div><button id="reset-zoom" title="Reset plot range">Reset zoom</button><button id="export-csv">CSV ↓</button><button id="export-svg">SVG ↓</button><button id="export-png">PNG ↓</button></div></div>
+<div class="plot-toolbar"><label class="sr-only" for="view">Response</label><select id="view"><option value="closed">Closed loop · R(s)T(s)</option><option value="open">Open loop · G(s)</option><option value="control">Control input · U(s)</option><option value="reference">Filtered reference · R(s)</option></select><div><button id="show-statistics" class="statistics-button" title="View time and frequency statistics with MATLAB ASTA labels">Statistics</button><button id="reset-zoom" title="Reset plot range">Reset zoom</button><button id="export-csv">CSV ↓</button><button id="export-svg">SVG ↓</button><button id="export-png">PNG ↓</button></div></div>
 <div class="chart-shell"><canvas id="chart" aria-label="System response plot; sampled values can be exported as CSV" role="img"></canvas><div id="tooltip" hidden></div><div id="chart-empty">Connecting to your local Octave engine…</div></div>
 <div class="chart-footer"><div id="legend"></div><span>Drag to zoom · click two points to measure</span></div>
 <div class="measurement" id="measurement" aria-live="polite">Move over a curve to inspect sampled values.</div>
@@ -23,5 +23,23 @@
 </section>
 <aside class="inspector"><div class="section-heading"><span>DESIGN METRICS</span><span class="mini-tag" id="sample-tag">SAMPLED</span></div><p class="metrics-subtitle">Current design · closed-loop step</p><div class="metric hero-metric"><span>Overshoot</span><strong id="m-overshoot">—</strong><small>relative to final value</small></div><div class="metric"><span>Settling time · 2%</span><strong id="m-settle">—</strong><small id="settling-note">Observed within the chosen horizon</small></div><div class="metric"><span>Rise time · 10–90%</span><strong id="m-rise">—</strong></div><div class="metric"><span>Peak control input</span><strong id="m-control">—</strong></div><div class="inspector-divider"></div><div class="section-heading"><span>STABILITY & FREQUENCY</span></div><div class="metric-pair"><span>Phase margin</span><strong id="m-phase">—</strong></div><div class="metric-pair"><span>Gain margin</span><strong id="m-gain">—</strong></div><div class="metric-pair"><span>Delay margin</span><strong id="m-delay">—</strong></div><div class="metric-pair"><span>T peak</span><strong id="m-peak">—</strong></div><div class="metric-pair"><span>Resonance ω</span><strong id="m-resonance">—</strong></div><div class="metric-pair"><span>Bandwidth · −3 dB</span><strong id="m-bandwidth">—</strong></div><details class="metrics-details"><summary>All statistics</summary><pre id="all-stats"></pre></details><div class="local-note"><span>● LOCAL WORKSPACE</span><p>Models and calculations stay on this computer. Your original MATLAB files are preserved.</p></div></aside>
 </main><footer class="statusbar"><span id="status" role="status" aria-live="polite">Starting Octave…</span><span id="performance">Persistent engine · exact model coefficients</span></footer>
+
+<dialog id="statistics-dialog" aria-labelledby="statistics-title">
+  <div class="statistics-header">
+    <div><span class="eyebrow">ASTA ANALYSIS</span><h2 id="statistics-title">Response statistics</h2><p>Time and frequency statistics with the labels used in MATLAB ASTA.</p></div>
+    <button id="close-statistics" aria-label="Close statistics">Close ×</button>
+  </div>
+  <div class="statistics-controls">
+    <label for="statistics-design">Design<select id="statistics-design"></select></label>
+    <label for="statistics-precision">Precision<select id="statistics-precision"><option value="6">6 significant digits</option><option value="10">10 significant digits</option><option value="full">Full precision</option></select></label>
+    <div class="statistics-actions"><button id="statistics-csv">Export statistics CSV</button><button id="statistics-refresh">Update response</button></div>
+  </div>
+  <div id="statistics-notice" class="statistics-notice" role="status"></div>
+  <div class="statistics-tables">
+    <section aria-labelledby="time-statistics-title"><h3 id="time-statistics-title">Time Domain Statistics</h3><p class="statistics-context">Closed-loop output Y = R·T · unit reference step</p><div class="statistics-table-scroll"><table id="time-statistics-table"><thead><tr><th scope="col">MATLAB ASTA label</th><th scope="col">Value</th><th scope="col">Meaning</th></tr></thead><tbody></tbody></table></div></section>
+    <section aria-labelledby="frequency-statistics-title"><h3 id="frequency-statistics-title">Frequency Domain Statistics</h3><p class="statistics-context">Complementary sensitivity T = L / (1 + L)</p><div class="statistics-table-scroll"><table id="frequency-statistics-table"><thead><tr><th scope="col">MATLAB ASTA label</th><th scope="col">Value</th><th scope="col">Meaning</th></tr></thead><tbody></tbody></table></div></section>
+  </div>
+  <div class="statistics-notes"><p><strong>T peak and Mr differ:</strong> Mr (dB) = |T(jω)| max (dB) − |T(0)| (dB). Tp is peak time; it is different from the 10–90% rise time.</p><p id="statistics-sampling"></p><p>Y infini includes the reference prefilter R; |T(0)| describes T alone. Static Error is signed relative to a unit reference. Settling times are observed estimates within the chosen horizon. — means undefined or not observed; ∞ is an infinite value.</p></div>
+</dialog>
 <input type="file" id="session-file" accept=".json" hidden><input type="file" id="model-file" accept=".syst,.txt" hidden>
 </body></html>
