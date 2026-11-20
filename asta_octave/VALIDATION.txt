@@ -38,3 +38,11 @@ Saved design selection, precision and full-precision CSV: PASS
 Stale-result messaging, keyboard controls and mobile report layout: PASS
 Existing plots/comparisons/export browser regression: PASS
 Octave package install/load/launch/self-tests/unload/uninstall: PASS
+
+Lag/M-contour update 1.2.0 (20 November 2026):
+Lag DC/high-frequency gains, pole/zero order and phase: PASS
+Invalid lag parameters, saved projects and comparisons: PASS
+Single magenta 2.3 dB contour, exact geometry, fit zoom and SVG: PASS
+Native Octave single-contour geometry/style: PASS
+Existing plots, statistics and mobile browser regression: PASS
+Octave package install/load/launch/self-tests/unload/uninstall: PASS

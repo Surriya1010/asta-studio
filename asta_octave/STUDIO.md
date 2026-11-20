@@ -39,11 +39,12 @@ No JavaScript packages, external servers, accounts or CDNs are needed.
 ## Workspace
 
 - **Left:** edit the plant and controller directly, load any of the 19 supplied
-  models, and optionally add a reference prefilter. P/PI/PD/PID and derivative
+  models, and optionally add a reference prefilter. P/PI/PD/PID, lag compensation and derivative
   on output are available. Custom rational controllers use numerator/denominator
   fields. Coefficients accept decimal and scientific notation.
 - **Centre:** switch between all ten time/frequency responses without recalculating.
-  Nichols includes closed-loop magnitude contours and the 2.3 dB contour.
+  Nichols shows only the 2.3 dB M-contour, highlighted in magenta. Fit 2.3 dB
+  zooms to it; Reset zoom restores the full response range.
   Nyquist includes both branches and the critical point. Bode shows magnitude
   and phase together. Drag a rectangle to zoom; Reset zoom restores the range.
   Hover for sampled coordinates. Click two points on the same design to measure
@@ -81,8 +82,8 @@ select Fine to compare with the original lab calculations. Large curves are draw
 using extrema-preserving display buckets; all calculated points remain available
 in memory and in CSV exports. This display optimization does not alter model
 coefficients or sampled data. SVG exports use all points; PNG captures the
-currently displayed chart. SVG exports contain data curves and axes; PNG also
-includes the Nichols background contours.
+currently displayed chart. SVG and PNG exports include the single highlighted 2.3 dB Nichols contour
+and label, as well as the data curves and axes.
 
 A local benchmark with 4,001 samples in each domain measured a first request of
 671 ms and repeat cached requests of 65–82 ms, returning identical numerical data
@@ -138,3 +139,15 @@ DC gain/static error, T peak versus Mr, saved designs, unchanged sampling, full
 precision CSV, keyboard dismissal/focus, stale/unstable/infinite values, and
 390 px mobile layout. It uses `ASTA_TEST_URL` and `ASTA_CDP_URL` to select the
 test server and isolated Chrome debugging connection.
+
+## Lag compensator
+
+Choose Lag compensator in the K(s) structure menu. Its parameters are gain P,
+zero time Tz > 0 and lag ratio beta > 1. The formula is
+`K(s) = P*(1+Tz*s)/(1+beta*Tz*s)`. DC gain is P and high-frequency gain is P/beta;
+the pole at -1/(beta*Tz) is closer to the origin than the zero at -1/Tz.
+These parameters are retained in saved projects and comparison snapshots.
+
+`tests/lag_nichols_browser.mjs` checks the lag editor, coefficients, invalid
+parameters, saved designs, the single magenta contour, fit zoom, SVG and mobile
+layout. `tests/test_nichols_reference.m` verifies the native contour geometry.

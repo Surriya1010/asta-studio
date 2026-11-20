@@ -63,12 +63,12 @@ r -> R -> [error = filtered reference - measured output] -> K -> G -> y
 
 - Edit numerator/denominator coefficients in descending powers of s.
 - Gain, integrator, first-order, second-order and lead/lag model presets.
-- P, I, PI, PD and PID controllers, including filtered derivative on output.
+- P, I, PI, PD, PID and lag controllers, including filtered derivative on output.
 - Import/export the supplied NS/DS `.syst` files, also with a `.txt` extension.
 - Open-loop, closed-loop, control and filtered-reference step responses.
 - Arbitrary-input simulations through the scripting API.
 - Nichols, Nyquist, Bode and sensitivity magnitude plots.
-- Nichols magnitude contours including 2.3 dB, plus phase contours.
+- A single highlighted 2.3 dB Nichols M-contour, with fit-to-contour browser zoom.
 - Saved project comparisons, time/frequency transfer, editable sampling ranges.
 - Point coordinates, two-point measurements, zoom, legends, figure/CSV export.
 - Gain, phase and delay margins; sampled S/T/W peaks and resonance ratio;
@@ -174,3 +174,7 @@ Official references:
 - https://docs.octave.org/latest/Status-of-Variables.html (no `.p` support)
 - https://gnu-octave.github.io/pkg-control/ (control package)
 - https://octave.sourceforge.io/control/function/margin.html (margin units)
+
+Lag preset: `[K,R] = asta_controller('lag', P, Tz, beta)` gives
+`K = P*(1+Tz*s)/(1+beta*Tz*s)` and `R = 1`, requiring Tz > 0 and beta > 1.
+The native controller menu and browser K(s) editor both expose this preset.

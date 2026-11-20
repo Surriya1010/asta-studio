@@ -17,7 +17,7 @@ function f = asta_gui()
     item(menu,'Load NS/DS file...',@() act(f,'import',k));
     item(menu,'Save NS/DS file...',@() act(f,'export',k));
     if strcmp(k,'K')
-      for type = {'p','i','pi','pd','pid','pd-output','pid-output'}
+      for type = {'p','i','pi','pd','pid','pd-output','pid-output','lag'}
         v = type{1}; item(menu,upper(v),@() act(f,'controller',v));
       end
     else
@@ -83,9 +83,15 @@ function act(f,action,varargin)
       asta_write_system(fullfile(path,name),p.(key),info); return;
     case 'controller'
       type = varargin{1};
-      v = inputdlg({'P','Ti (s; positive)','Td (s)','Filter tau (s)'},type,1,{'1','1','0.9','0.09'});
-      if isempty(v), return; end
-      [a.project.K,a.project.R] = asta_controller(type,scalar(v{1}),scalar(v{2}),scalar(v{3}),scalar(v{4}));
+      if strcmp(type,'lag')
+        v = inputdlg({'Gain P','Zero time Tz (s; positive)','Lag ratio beta (>1)'},'Lag compensator',1,{'1','1','10'});
+        if isempty(v), return; end
+        [a.project.K,a.project.R] = asta_controller('lag',scalar(v{1}),scalar(v{2}),scalar(v{3}));
+      else
+        v = inputdlg({'P','Ti (s; positive)','Td (s)','Filter tau (s)'},type,1,{'1','1','0.9','0.09'});
+        if isempty(v), return; end
+        [a.project.K,a.project.R] = asta_controller(type,scalar(v{1}),scalar(v{2}),scalar(v{3}),scalar(v{4}));
+      end
       % Output-derivative controllers necessarily set their reference factor.
     case 'template'
       key = varargin{1}; type = varargin{2};

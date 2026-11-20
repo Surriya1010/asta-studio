@@ -1,3 +1,11 @@
+ASTA Studio 1.2.0 (20 November 2026)
+
+* Add a lag compensator to K(s), with gain P, zero time Tz and lag ratio beta.
+* Preserve lag parameters in saved projects and remembered designs.
+* Show only the 2.3 dB M-contour, with a thick magenta dashed line and label.
+* Add Fit 2.3 dB zoom, include the contour in automatic ranges and SVG exports.
+* Apply the same single-contour styling to native Octave Nichols plots.
+
 ASTA Studio 1.1.0 (20 November 2026)
 
 * New Statistics button with MATLAB-labelled time/frequency tables.

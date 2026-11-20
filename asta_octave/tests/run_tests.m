@@ -81,6 +81,17 @@ function run_tests()
   for spec={{'gain',2},{'integrator',2},{'first',2,3},{'second',2,3,.4},{'leadlag',2,3,4}}
     args=spec{1}; asta_template(args{:});
   end
+  % Lag compensator: DC/high-frequency gain, pole/zero order and phase lag.
+  [lag,lag_reference]=asta_controller('lag',4.8,1,10);
+  assert(abs(dcgain(lag)-4.8)<1e-12);
+  assert(abs(abs(freqresp(lag,1e8))-.48)<1e-10);
+  assert(abs(pole(lag)+.1)<1e-12 && abs(zero(lag)+1)<1e-12);
+  assert(angle(freqresp(lag,1/sqrt(10)))<0 && dcgain(lag_reference)==1);
+  for invalid={[1 1],[0 10],[1 .5],[Inf 10],[1 Inf]}
+    args=invalid{1}; failed=false;
+    try, asta_controller('lag',1,args(1),args(2)); catch, failed=true; end
+    assert(failed);
+  end
   % MATLAB-labelled report fields: non-unit final value, prefilter and zeros.
   example=asta_project(tf(1,[1 2 1]),tf(6),tf(1),'Non-unit DC');
   report=asta_statistics(example,linspace(0,25,5001),w);

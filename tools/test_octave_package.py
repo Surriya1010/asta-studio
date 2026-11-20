@@ -51,6 +51,12 @@ def main():
                 assert b'statisticsRows' in response.read()
             with opener.open(url+'/',timeout=10) as response:
                 assert b'id="statistics-dialog"' in response.read()
+            with opener.open(url+'/app.js',timeout=10) as response:
+                assert b'#b21493' in response.read()
+            with opener.open(url+'/',timeout=10) as response:
+                assert b'value="lag"' in response.read()
+            lag=request({'action':'controller','kind':'lag','P':2,'Tzero':3,'beta':5})
+            assert lag['K']['num']==[6,2] and lag['K']['den']==[15,1]
             assert len(request({'action':'systems'}))==19
             p={'name':'Installed package P','G':{'num':[.1],'den':[1,2,1,0]},'K':{'num':[4.8],'den':[1]},'R':{'num':[1],'den':[1]}}
             grid={'time_end':40,'time_samples':4001,'w_min':.001,'w_max':1000,'w_samples':4001}

@@ -100,3 +100,18 @@ Browser checks cover all twelve label mappings, current/saved design selection,
 6/10/full display precision, full-precision CSV, stale-result messages, keyboard
 focus/dismissal and mobile layout. The existing plotting workflow and isolated
 Octave install/load/launch/unload/uninstall checks pass.
+
+## Lag controller and single M-contour (version 1.2.0)
+
+K(s) now includes a lag preset P(1+Tz*s)/(1+beta*Tz*s), with Tz>0 and beta>1.
+Numerical checks cover DC/high-frequency gains, pole/zero order, negative phase
+contribution and invalid inputs. Browser checks cover coefficient generation,
+saved drafts/comparisons and the installed backend. Native controller menu support
+is implemented; the Qt dialog itself remains untested in this environment.
+
+Only the 2.3 dB M-contour is drawn, using cached analytic points in the browser
+and an analytic contour in native Octave. Both satisfy |L/(1+L)|=10^(2.3/20).
+It is a thick magenta dashed curve with a label and browser legend. Automatic
+Nichols ranges include it; Fit 2.3 dB inspects it; Reset zoom restores the full
+range. PNG and SVG retain the contour. Tests verify the geometry, a single
+reference, visible colour, fit zoom, SVG inclusion and mobile layout.

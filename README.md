@@ -13,7 +13,7 @@ In Octave:
 
 ```octave
 pkg install -forge control  % only if control is not already installed
-pkg install "https://github.com/Surriya1010/asta-studio/releases/download/v1.1.0/astastudio-1.1.0.tar.gz"
+pkg install "https://github.com/Surriya1010/asta-studio/releases/download/v1.2.0/astastudio-1.2.0.tar.gz"
 pkg load astastudio
 astastudio
 ```
@@ -46,7 +46,7 @@ To rebuild and test the installable archive from this checkout:
 
 ```sh
 python3 tools/build_octave_package.py
-python3 tools/test_octave_package.py dist/astastudio-1.1.0.tar.gz
+python3 tools/test_octave_package.py dist/astastudio-1.2.0.tar.gz
 ```
 
 The builder creates a reproducible archive with package metadata, runtime assets,
@@ -77,7 +77,7 @@ for a different port, or `--no-browser` to avoid automatically opening a tab.
 
 ## Features
 
-- Inline plant and controller editing; P, I, PI, PD and PID presets.
+- Inline plant and controller editing; P, I, PI, PD, PID and Lag presets.
 - Filtered derivative on output and optional reference prefilter.
 - Open/closed-loop, control and reference step responses.
 - Nichols, Nyquist, Bode, sensitivity and complementary-sensitivity plots.
@@ -93,6 +93,27 @@ statistics are sampled estimates; choose a finer grid for more precise values.
 A measured 4,001-point request took 671 ms initially and 65–82 ms from cache on the
 development machine, with identical numerical results. This is a cache comparison,
 not a MATLAB performance benchmark.
+
+## Lag controller and the 2.3 dB contour
+
+Select **Lag compensator** under **Controller K(s) → Structure**. Set gain P,
+zero time Tz (seconds) and lag ratio β (>1):
+
+```
+K(s) = P (1 + Tz s) / (1 + β Tz s)
+```
+
+Its DC gain is P, high-frequency gain is P/β, zero is at −1/Tz and pole is
+at −1/(β Tz). The pole is closer to the origin, producing phase lag. The editor
+shows pole/zero frequencies. Saved projects and remembered designs retain these
+settings. The numerical API is `asta_controller('lag', P, Tz, beta)`.
+
+Nichols plots now show **only M = 2.3 dB** as a thick magenta dashed reference
+contour with a matching label and legend. Click **Fit 2.3 dB** to inspect it;
+**Reset zoom** shows the full response range. The response curves remain unchanged.
+Canvas/PNG, SVG and native Octave plots use the same single reference contour.
+
+![Lag controller and highlighted M-contour](asta_octave/examples/studio_lag_nichols.png)
 
 ## MATLAB-style statistics
 

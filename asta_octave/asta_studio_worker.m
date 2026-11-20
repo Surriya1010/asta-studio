@@ -27,7 +27,11 @@ function asta_studio_worker(request_file, response_file)
           a=asta_statistics(p,t,w); a=rmfield(a,{'time_grid','frequency_grid'});
           out.statistics=a;
         case 'controller'
-          [K,R]=asta_controller(req.kind,req.P,req.Ti,req.Td,req.tau);
+          if strcmpi(req.kind,'lag')
+            [K,R]=asta_controller('lag',req.P,req.Tzero,req.beta);
+          else
+            [K,R]=asta_controller(req.kind,req.P,req.Ti,req.Td,req.tau);
+          end
           out=struct('K',encode_model(K),'R',encode_model(R));
         case 'systems'
           directory=fullfile(fileparts(mfilename('fullpath')),'systeme'); files=dir(fullfile(directory,'*.syst'));
